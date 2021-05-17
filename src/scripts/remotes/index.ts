@@ -16,7 +16,7 @@ interface ILoginInfo {
 
 export const getToken =  ()=>  token
 
-export const apiBasePath = import.meta.env.PROD? 'http://8.136.213.50:8080' : app.apiBasePath// + '/admin'
+export const apiBasePath = process.env.NODE_ENV === "production" ? 'http://8.136.213.50:8080' : app.apiBasePath// + '/admin'
 
 export function getHeaders(contentType? : string) : any {
 	let headers : HeadersInit = {

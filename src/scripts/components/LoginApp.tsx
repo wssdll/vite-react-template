@@ -35,7 +35,7 @@ const StyledImg = styled.img`
   margin-right: 20px;
 `
 
-const ContainerDiv = styled.div`
+export const ContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
