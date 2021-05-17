@@ -1,11 +1,11 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {message, Layout, Menu, ConfigProvider, Modal, Dropdown, Avatar, Tabs} from 'antd'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
 import Remote from 'beyond-remote'
 import redirectUrl from '@/scripts/utils/RedirectUrl'
 import pages, { PageId } from '@/scripts/components/pages'
 import {IMenu, getPermissionMenus} from '@/scripts/menus'
-import pageStore, { getPageInstanceProps, IPageInstance } from '@/scripts/stores/pageStore'
+import pageStore, {getPageInstanceProps, IPageInstance, triggerSideLink} from '@/scripts/stores/pageStore'
 import loaders, {loaderList} from './pages/loaders'
 import ErrorPage from './pages/others/Error'
 
@@ -13,11 +13,9 @@ import SideMenu from '@/scripts/components/AppComponents/SideMenu'
 import IResponse from '@/remotes/types/dto/response/IResponse'
 import ResponseCode from '@/remotes/types/dto/response/ResponseCode'
 
-import LoginLogo from '@/images/login-logo.png'
+import Logo from '@/images/logo.svg'
 
 import storage from 'beyond-lib/lib/storage'
-
-import '@/styles/style.less'
 
 import {
 	UserOutlined,
@@ -32,8 +30,9 @@ import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
-	Link
+	Link, Redirect, withRouter, useLocation,
 } from "react-router-dom";
+import {RouteComponentProps} from "react-router";
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -94,7 +93,7 @@ const User = styled.div`
   }
 `
 
-const Logo = styled.div`
+const LogoContainer = styled.div`
   height: 64px;
   display: flex;
   align-items: center;
@@ -140,11 +139,34 @@ interface IAppState {
 	collapsed:boolean
 }
 
-interface IAppProps {
+interface IAppProps extends RouteComponentProps{
 	menus : IMenu[]
-	appType :  'sfa' | 'domain'
+	appType :  'main'
 	defaultPageId? : PageId
 }
+
+interface ISwitch extends RouteComponentProps {
+	defaultPageId: string
+}
+
+const SwitchRouter = (props: ISwitch) => {
+	let location = useLocation();
+	useEffect(() => {
+		let current = loaderList.find(item=>item.path === location.pathname)
+		if(current){
+			triggerSideLink(current.title)
+		}
+	}, [location])
+
+	return <Switch>
+		<Route exact path='/' render={() => (<Redirect to={props.defaultPageId}/>)}/>
+		{loaderList.map(item => {
+			return <Route key={item.id} path={item.path} component={item.Component}/>
+		})}
+	</Switch>
+}
+
+const LOCSwitch = withRouter(SwitchRouter)
 
 export default class App extends React.Component<IAppProps, IAppState> {
 
@@ -184,11 +206,19 @@ export default class App extends React.Component<IAppProps, IAppState> {
 		this.off()
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps:IAppProps) {
 		if (process.env.NODE_ENV !== 'production') {
 			this.off()
 			this.off = pageStore.onUpdate(this.handlerUpdate)
 		}
+
+		if (this.props.location !== prevProps.location) {
+			this.onRouteChanged();
+		}
+	}
+
+	onRouteChanged() {
+		console.log("ROUTE CHANGED");
 	}
 
 	redirectToLogin = ()=>{
@@ -257,7 +287,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
 
 	initMenus(){
 		const {appType,menus} = this.props
-		if(appType === 'sfa'){
+		if(appType === 'main'){
 
 			let current = getPermissionMenus(menus)
 			this.setState({menus: current})
@@ -400,16 +430,16 @@ export default class App extends React.Component<IAppProps, IAppState> {
 					this.setState({collapsed})
 				}}
 				trigger={null} collapsible collapsed={this.state.collapsed}>
-				<Logo style={!this.state.collapsed ? {width: 200} : {width: 80}}>
+				<LogoContainer style={!this.state.collapsed ? {width: 200} : {width: 80}}>
 					<div>
 						<img
 							style={!this.state.collapsed ? {height: '32px', marginRight: '8px'} : {height: '32px'}}
-							src={LoginLogo}
+							src={Logo}
 							alt="logo"/>
 						{<span style={!this.state.collapsed ? {opacity: 1} : {opacity: 0, width: 0}} className="logo-title">后台管理系统</span>}
 					</div>
-					<div style={!this.state.collapsed ? {opacity: 1} : {opacity: 0, width: 0, height: 0}} className="logo-desc">FDD Management System</div>
-				</Logo>
+					<div style={!this.state.collapsed ? {opacity: 1} : {opacity: 0, width: 0, height: 0}} className="logo-desc">Management System</div>
+				</LogoContainer>
 				<SideMenu
 					menus={menus}
 					defaultOpenKeys={defaultOpenMenus}
@@ -450,16 +480,12 @@ export default class App extends React.Component<IAppProps, IAppState> {
 					{/*			)*/}
 					{/*		})}*/}
 					{/*</Tabs>*/}
-					<Switch>
-						{loaderList.map(item=>{
-							return <Route key={item.id+''} path={item.path} component={item.Component}/>
-						})}
-					</Switch>
+					<LOCSwitch defaultPageId={this.props.defaultPageId}/>
 				</Content>
 
 				<CustomFooter>
 					<div className="ant-pro-global-footer-copyright">
-						Copyright <CopyrightOutlined/> {app.year} Present
+						Copyright <CopyrightOutlined/> {app.year} React
 					</div>
 				</CustomFooter>
 			</Layout>

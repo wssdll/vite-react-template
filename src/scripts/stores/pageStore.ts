@@ -6,7 +6,7 @@ import storage from 'beyond-lib/lib/storage'
 
 const pagesEventBus = new EventBus()
 
-type AppType =  'sfa' | 'domain'
+type AppType =  'main'
 
 
 export interface IBasePageInstance<T extends object> {
@@ -25,17 +25,24 @@ export type PageEventMessage = 'update' | string | object
 
 const ACTIVE_CHANGE = 'activeChange'
 
-function triggerSideMenu(current: string,instances:IPageInstance<any>[]) {
-	let instance =  instances.find(item=>item.id === current)
-	if(instance){
+
+export function triggerSideLink(title: string) {
+	setTimeout(() => {
 		// @ts-ignore
-		let sideCollection:HTMLCollectionOf<HTMLElement> = document.getElementsByClassName('ant-menu-item')
+		let sideCollection: HTMLCollectionOf<HTMLElement> = document.getElementsByClassName('ant-menu-item')
 		for (let i = 0; i < sideCollection.length; i++) {
 			const sideArrElement = sideCollection[i]
-			if(sideArrElement.innerText === instance.title){
+			if (sideArrElement.innerText === title) {
 				sideArrElement.click()
 			}
 		}
+	},500)
+}
+
+function triggerSideMenu(current: string,instances:IPageInstance<any>[]) {
+	let instance =  instances.find(item=>item.id === current)
+	if(instance){
+		triggerSideLink(instance.title)
 	}
 }
 
@@ -139,9 +146,7 @@ class PageStore extends EventBus {
 		if(!activeId || !this.getInstanceById(activeId)){
 			this.activeId = instances[0] ? this.instances[0].id : null
 		}
-		setTimeout(() => {
-			triggerSideMenu(this.activeId,this.instances)
-		},500)
+		triggerSideMenu(this.activeId,this.instances)
 		// if(instances.some((instance)=> instance. ))
 		// if (!this.getActive()) {
 		// 	this.activeId = this.instances[0] ? this.instances[0].id : null

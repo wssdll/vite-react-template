@@ -27,7 +27,7 @@ import ISysUserLoginInput from '@/remotes/types/login/ISysUserLoginInput'
 import storage from 'beyond-lib/lib/storage'
 import './LoginApp.less'
 
-import LoginLogo from '@/images/login-logo.png'
+import Logo from '@/images/logo.svg'
 
 
 const StyledImg = styled.img`
@@ -210,10 +210,10 @@ const LoginApp = () => {
 			<LangDiv/>
 			<ContentDiv>
 				<TopDiv>
-					<StyledImg src={LoginLogo} alt="logo"/>
+					<StyledImg src={Logo} alt="logo"/>
 					<HeaderDiv>
-						<TitleDiv>短信管理系统</TitleDiv>
-						<DescDiv>web端短信管理系统</DescDiv>
+						<TitleDiv>后台管理系统</TitleDiv>
+						<DescDiv>web端后台管理系统</DescDiv>
 					</HeaderDiv>
 				</TopDiv>
 				<MainDiv>
@@ -223,7 +223,7 @@ const LoginApp = () => {
 			<FooterDiv>
 				<GlobalFooter
 					links={[]}
-					copyright={<div>Copyright <CopyrightOutlined/> {app.year} Present</div>}
+					copyright={<div>Copyright <CopyrightOutlined/> {app.year} React</div>}
 				/>
 			</FooterDiv>
 		</ContainerDiv>
