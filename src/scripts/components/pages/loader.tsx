@@ -33,7 +33,7 @@ export function load<T extends object>(loader : Loader /*, params? : T */) : Rea
 		}
 
 		componentDidUpdate(_prevProps: IPageProps<T>) {
-			console.log(this.props.page.pageId)
+			// console.log(this.props.page.pageId)
 		}
 
 		async componentDidMount() {
@@ -52,9 +52,9 @@ export function load<T extends object>(loader : Loader /*, params? : T */) : Rea
 		}
 
 		refresh = (e : IEvent<IPageInstance<any>>)=>{
-			if(e.data && e.data.id === this.props.page.id){
-				this._refresh()
-			}
+			// if(e.data && e.data.id === this.props.page.id){
+			// 	this._refresh()
+			// }
 		}
 
 		private _refresh() {

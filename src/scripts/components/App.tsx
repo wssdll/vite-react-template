@@ -6,7 +6,7 @@ import redirectUrl from '@/scripts/utils/RedirectUrl'
 import pages, { PageId } from '@/scripts/components/pages'
 import {IMenu, getPermissionMenus} from '@/scripts/menus'
 import pageStore, { getPageInstanceProps, IPageInstance } from '@/scripts/stores/pageStore'
-import loaders from './pages/loaders'
+import loaders, {loaderList} from './pages/loaders'
 import ErrorPage from './pages/others/Error'
 
 import SideMenu from '@/scripts/components/AppComponents/SideMenu'
@@ -420,39 +420,43 @@ export default class App extends React.Component<IAppProps, IAppState> {
 
 			<Layout className="site-layout">
 				{this.renderHeader()}
-				<Content
-					style={{padding: 16,}}
-				>
+				<Content style={{padding: 16}}>
 
-					<Tabs
-						// destroyInactiveTabPane
-						animated={false}
-						hideAdd
-						activeKey={pageStore.activeId}
-						type="editable-card"
-						onEdit={this.handlerCloseTabPane}
-						onChange={(pageInstanceId) => pageStore.active(pageInstanceId)}
-					>
-						{pageInstances
-							.filter((item) => pages[item.pageId])
-							.map((pageInstance,i) => {
-								const Component = loaders[pageInstance.pageId]
-								const isHome = pageInstance.pageId === this.props.defaultPageId
+					{/*<Tabs*/}
+					{/*	// destroyInactiveTabPane*/}
+					{/*	animated={false}*/}
+					{/*	hideAdd*/}
+					{/*	activeKey={pageStore.activeId}*/}
+					{/*	type="editable-card"*/}
+					{/*	onEdit={this.handlerCloseTabPane}*/}
+					{/*	onChange={(pageInstanceId) => pageStore.active(pageInstanceId)}*/}
+					{/*>*/}
+					{/*	{pageInstances*/}
+					{/*		.filter((item) => pages[item.pageId])*/}
+					{/*		.map((pageInstance,i) => {*/}
+					{/*			const Component = loaders[pageInstance.pageId]*/}
+					{/*			const isHome = pageInstance.pageId === this.props.defaultPageId*/}
 
-								const tabTitle = (
-									<Dropdown overlay={this.renderRightClickMenus(pageInstance,i)} trigger={['contextMenu']}>
-										<span>{pageInstance.title}</span>
-									</Dropdown>
-								)
+					{/*			const tabTitle = (*/}
+					{/*				<Dropdown overlay={this.renderRightClickMenus(pageInstance,i)} trigger={['contextMenu']}>*/}
+					{/*					<span>{pageInstance.title}</span>*/}
+					{/*				</Dropdown>*/}
+					{/*			)*/}
 
-								return (
-									<TabPane key={pageInstance.id} tab={tabTitle} closable={!isHome}>
-										{Component ?  <Component page={getPageInstanceProps(pageInstance)} /> : <ErrorPage />}
-									</TabPane>
-								)
-							})}
-					</Tabs>
+					{/*			return (*/}
+					{/*				<TabPane key={pageInstance.id} tab={tabTitle} closable={!isHome}>*/}
+					{/*					{Component ?  <Component page={getPageInstanceProps(pageInstance)} /> : <ErrorPage />}*/}
+					{/*				</TabPane>*/}
+					{/*			)*/}
+					{/*		})}*/}
+					{/*</Tabs>*/}
+					<Switch>
+						{loaderList.map(item=>{
+							return <Route key={item.id+''} path={item.path} component={item.Component}/>
+						})}
+					</Switch>
 				</Content>
+
 				<CustomFooter>
 					<div className="ant-pro-global-footer-copyright">
 						Copyright <CopyrightOutlined/> {app.year} Present
@@ -461,12 +465,12 @@ export default class App extends React.Component<IAppProps, IAppState> {
 			</Layout>
 		</Layout>
 		return (
-			<>
+			<Router>
 				<ConfigProvider
 					locale={zhCN}
 					children={layout}
 				/>
-			</>
+			</Router>
 		)
 	}
 }

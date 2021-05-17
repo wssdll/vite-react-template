@@ -4,6 +4,7 @@ import {IMenu, MenuEnum} from '@/scripts/menus'
 import PageLink from '@/scripts/components/commons/PageLink'
 import {MenuProps} from 'antd/lib/menu'
 import {SettingOutlined, BankOutlined, BarChartOutlined} from '@ant-design/icons'
+import {Link} from "react-router-dom";
 
 
 const {SubMenu} = Menu
@@ -43,7 +44,7 @@ const SideMenu = ({ menus ,...rest}: ISideMenuProps) => {
 const MenuItem = ({menu,key} : { menu : IMenu, key : string}) => {
 	return (
 		<Menu.Item key={key} icon={IconMap[menu.id]}>
-			<PageLink source="menu" title={menu.title} to={menu.Page} params={menu.params}>{menu.text}</PageLink>
+			<Link title={menu.title} to={menu.path} >{menu.text}</Link>
 		</Menu.Item>
 	)
 }

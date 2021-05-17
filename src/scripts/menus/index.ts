@@ -18,6 +18,7 @@ export interface IMenu {
 	params? : object
 	title? : string
 	hidden? : string
+	path? : string
 }
 
 let permissionsMap : {[key : number] : boolean} = {}

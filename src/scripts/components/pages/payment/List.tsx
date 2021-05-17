@@ -72,11 +72,11 @@ const CommonPaymentTable = (props:ICommonTableProps) => {
 	//
 
 	useEffect(() => {
-		props.page.get((e : any)=>{
-			if(e.data === 'update'){
-				actionRef.current?.reload()
-			}
-		})
+		// props.page.get((e : any)=>{
+		// 	if(e.data === 'update'){
+		// 		actionRef.current?.reload()
+		// 	}
+		// })
 	}, [])
 
 
