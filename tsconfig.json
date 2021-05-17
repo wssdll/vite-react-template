@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext","es2015"],
+    "types": [
+      "node",
+      "vite/client"
+    ],
+
+    "allowJs": false,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+
+
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "outDir": "./dist/",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noEmitHelpers": true,//不生成辅助方法，对应importHelpers
+    "importHelpers": true,//引用外部的辅助方法
+    "strictBindCallApply" : true,
+    "strictNullChecks" : false,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*",
+        "node_modules/*"
+      ]
+    },
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strictPropertyInitialization": false
+  },
+  "files": [
+    "./declarations.d.ts"
+  ],
+  "include": ["./src"]
+}
